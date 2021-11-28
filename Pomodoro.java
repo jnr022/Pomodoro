@@ -10,11 +10,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
-
-
-
-
 public class Pomodoro {
 
 	static class OnePomodoro{
@@ -35,15 +30,7 @@ public class Pomodoro {
 	static LocalDateTime now;
 	
 	public static void main(String[] args) {
-		 
-		
-		// text field -> Verlauf
-		// History
-		 
-		
 		JFrame frame = new JFrame("Pomodoro");
-		
-		
 		JPanel panelOfTimer = new JPanel();
 		panelOfTimer.setBounds(270, 30, 100, 60);
 		panelOfTimer.setBackground(Color.PINK);
@@ -53,7 +40,7 @@ public class Pomodoro {
 		labelOfTimer.setForeground(Color.WHITE );
 		panelOfTimer.add(labelOfTimer);
 		
-		JLabel titleOfNamePomodoro = new JLabel("Geben Sie einen Namen für Pomodoro ein:");
+		JLabel titleOfNamePomodoro = new JLabel("Geben Sie einen Namen fÃ¼r Pomodoro ein:");
 		titleOfNamePomodoro.setBounds(15, 120, 280, 40);
 		
 		JTextField nameOfPomodoro = new JTextField();
@@ -63,7 +50,6 @@ public class Pomodoro {
 		warningToUser.setBounds(15, 270, 350, 100);
 		JLabel warningToUser2 = new JLabel("Nach Ablauf wird Ihr Pomodoro gespeichert.");
 		warningToUser2.setBounds(15, 286, 350, 100);
-		 
 		
 		JButton button = new JButton("Start");
 		button.setBounds(15, 210, 100, 35);
@@ -71,17 +57,13 @@ public class Pomodoro {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
 				warningToUser.setText("Ihr Pomodoro " + nameOfPomodoro.getText());
 				warningToUser2.setText("wird nach dem Beenden gespeichert.");
-				
-				
 				if(!isStarted) {
 					isStarted= true;
 					if(onePomodoro == null) {
 						onePomodoro = new OnePomodoro();
 					}
-					
 					File fileOfProgress = new File("pomodoro.txt");
 					try {
 						if(fileOfProgress.createNewFile()) {
@@ -93,11 +75,7 @@ public class Pomodoro {
 						System.out.println("Fehler ist aufgetreten.");
 						e1.printStackTrace();
 					}
-					
-					
-					
 					timer = new Timer(1000, new ActionListener() {
-						
 						String timerText = "";
 						
 						@Override
@@ -105,43 +83,28 @@ public class Pomodoro {
 							onePomodoro.decreaseOnePomByOneSec();
 							if(onePomodoro.getOnePom()<=0) {
 								System.out.println("Pomodoro erfolgreich beendet");
-								
-								now = LocalDateTime.now();
-								
-								FileWriter writer = null;
-								
+								now = LocalDateTime.now();								
+								FileWriter writer = null;								
 								try {
 									writer= new FileWriter(fileOfProgress, true);
 								} catch (IOException e1) {
 								  
 									e1.printStackTrace();
 								}
-								
-								
-								
 								try {
 									writer.append(nameOfPomodoro.getText()+" -> "+ dtf.format(now) + "wurde ein Pomodoro von 25 Minuten beendet.\n");
 									warningToUser.setText("Pomodoro wurde gespeichert.");
 									warningToUser2.setText("");
 									writer.close();
-								} catch (IOException e1) {
-								  
+								} catch (IOException e1) { 
 									e1.printStackTrace();
 								}
-								
-								
-								
-								
 								timer.stop();
 								isStarted = false;
 								onePomodoro = new OnePomodoro();
-								
 							}
-							
 							int minute = (onePomodoro.getOnePom()/1000) /60;
-							int second = (onePomodoro.getOnePom()/1000) % 60;
-					
-					
+							int second = (onePomodoro.getOnePom()/1000) % 60;			
 							if(minute<10 && second<10) {
 								timerText= "0"+minute+":0"+second;
 							} else if ( minute <10 && !(second<10)) {
@@ -153,50 +116,39 @@ public class Pomodoro {
 						}
 					});
 					timer.start();
-				}
-				
+				}	
 			}
 		});
 		
 		JButton button2 = new JButton("Stopp");
 		button2.setBounds(130, 210, 100, 35);
-		button2.addActionListener(new ActionListener() {
-			
+		button2.addActionListener(new ActionListener() {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(onePomodoro==null) return;
 				timer.stop();
 				isStarted=false;
-				
 				if(onePomodoro.getOnePom()!=(new OnePomodoro().getOnePom())) {
 					warningToUser.setText("Pomodoro wurde angehalten.");
 					warningToUser2.setText("Anhalten von Pomodoro wird nicht empfohlen.");
 				} else {
 					warningToUser.setText("Pomodoro kann nicht vor dem Start angehalten werden.");
 					warningToUser2.setText("");
-				}
-				
+				}	
 			}
-		});
-		
-		
+		});	
 		JButton button3 = new JButton("Abbrechen");
 		button3.setBounds(245, 210, 100, 35);
-		button3.addActionListener(new ActionListener() {
-			
+		button3.addActionListener(new ActionListener() {	
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				
+			public void actionPerformed(ActionEvent e) {	
 				if(onePomodoro==null) return;
 				timer.stop();
 				isStarted=false;
 				onePomodoro= new OnePomodoro();
-				
 				String timerText= "";
 				int minute = (onePomodoro.getOnePom()/1000) /60;
 				int second = (onePomodoro.getOnePom()/1000) % 60;
-				
-
 				if(minute<10 && second<10) {
 					timerText= "0"+minute+":0"+second;
 				} else if ( minute <10 && !(second<10)) {
@@ -205,21 +157,16 @@ public class Pomodoro {
 					timerText= minute+":0"+second;
 				} else timerText = minute+":"+second;
 				labelOfTimer.setText(timerText);
-				
 				warningToUser.setText("Pomodoro wurde abgebrochen");
 				warningToUser2.setText("");
-				
 			}
 		});
-		
 		
 		JButton progress = new JButton(" Verlauf");
 		progress.setBounds(15, 30, 105, 40);
 		progress.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
 				try {
 					Desktop.getDesktop().open(new java.io.File("pomodoro.txt"));
 				} catch (IOException e1) {
@@ -227,11 +174,8 @@ public class Pomodoro {
 					warningToUser2.setText("");
 					e1.printStackTrace();
 				}
-				
 			}
 		});
-		
-		
 		
 		frame.add(nameOfPomodoro);
 		frame.add(titleOfNamePomodoro);
@@ -245,7 +189,5 @@ public class Pomodoro {
 		frame.setLayout(null);
 		frame.setSize(400,400);
 		frame.setVisible(true);
-
 	}
-
 }
